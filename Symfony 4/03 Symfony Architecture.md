@@ -62,6 +62,48 @@ https://symfony.com/doc/4.0/reference/configuration/swiftmailer.html
 `
 https://symfony.com/doc/4.0/email.html
 
+
+### HttpKernel component
+```php
+class Kernel extends BaseKernel
+{
+    use MicroKernelTrait;
+
+    private const CONFIG_EXTS = '.{php,xml,yaml,yml}';
+
+    public function registerBundles(): iterable
+    {
+        $contents = require $this->getProjectDir().'/config/bundles.php';
+        foreach ($contents as $class => $envs) {
+            if ($envs[$this->environment] ?? $envs['all'] ?? false) {
+                yield new $class();
+            }
+        }
+    }
+
+    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
+    {
+        $container->addResource(new FileResource($this->getProjectDir().'/config/bundles.php'));
+        $container->setParameter('container.dumper.inline_class_loader', true);
+        $confDir = $this->getProjectDir().'/config';
+
+        $loader->load($confDir.'/{packages}/*'.self::CONFIG_EXTS, 'glob');
+        $loader->load($confDir.'/{packages}/'.$this->environment.'/**/*'.self::CONFIG_EXTS, 'glob');
+        $loader->load($confDir.'/{services}'.self::CONFIG_EXTS, 'glob');
+        $loader->load($confDir.'/{services}_'.$this->environment.self::CONFIG_EXTS, 'glob');
+    }
+
+    protected function configureRoutes(RouteCollectionBuilder $routes): void
+    {
+        $confDir = $this->getProjectDir().'/config';
+
+        $routes->import($confDir.'/{routes}/'.$this->environment.'/**/*'.self::CONFIG_EXTS, '/', 'glob');
+        $routes->import($confDir.'/{routes}/*'.self::CONFIG_EXTS, '/', 'glob');
+        $routes->import($confDir.'/{routes}'.self::CONFIG_EXTS, '/', 'glob');
+    }
+}
+```
+
 ###  Kernel request
 https://symfony.com/doc/4.0/components/http_kernel.html#component-http-kernel-kernel-request
 
@@ -146,6 +188,92 @@ public function __construct(string $environment, bool $debug)
 ### Which kernel event exist?
 https://symfony.com/doc/4.0/components/http_kernel.html#component-http-kernel-event-table
 
+### 
+```php
+/**
+ * The REQUEST event occurs at the very beginning of request
+ * dispatching.
+ *
+ * This event allows you to create a response for a request before any
+ * other code in the framework is executed.
+ *
+ * @Event("Symfony\Component\HttpKernel\Event\GetResponseEvent")
+ */
+const REQUEST = 'kernel.request';
+
+/**
+ * The EXCEPTION event occurs when an uncaught exception appears.
+ *
+ * This event allows you to create a response for a thrown exception or
+ * to modify the thrown exception.
+ *
+ * @Event("Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent")
+ */
+const EXCEPTION = 'kernel.exception';
+
+/**
+ * The VIEW event occurs when the return value of a controller
+ * is not a Response instance.
+ *
+ * This event allows you to create a response for the return value of the
+ * controller.
+ *
+ * @Event("Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent")
+ */
+const VIEW = 'kernel.view';
+
+/**
+ * The CONTROLLER event occurs once a controller was found for
+ * handling a request.
+ *
+ * This event allows you to change the controller that will handle the
+ * request.
+ *
+ * @Event("Symfony\Component\HttpKernel\Event\FilterControllerEvent")
+ */
+const CONTROLLER = 'kernel.controller';
+
+/**
+ * The CONTROLLER_ARGUMENTS event occurs once controller arguments have been resolved.
+ *
+ * This event allows you to change the arguments that will be passed to
+ * the controller.
+ *
+ * @Event("Symfony\Component\HttpKernel\Event\FilterControllerArgumentsEvent")
+ */
+const CONTROLLER_ARGUMENTS = 'kernel.controller_arguments';
+
+/**
+ * The RESPONSE event occurs once a response was created for
+ * replying to a request.
+ *
+ * This event allows you to modify or replace the response that will be
+ * replied.
+ *
+ * @Event("Symfony\Component\HttpKernel\Event\FilterResponseEvent")
+ */
+const RESPONSE = 'kernel.response';
+
+/**
+ * The TERMINATE event occurs once a response was sent.
+ *
+ * This event allows you to run expensive post-response jobs.
+ *
+ * @Event("Symfony\Component\HttpKernel\Event\PostResponseEvent")
+ */
+const TERMINATE = 'kernel.terminate';
+
+/**
+ * The FINISH_REQUEST event occurs when a response was generated for a request.
+ *
+ * This event allows you to reset the global and environmental state of
+ * the application, when it was changed during the request.
+ *
+ * @Event("Symfony\Component\HttpKernel\Event\FinishRequestEvent")
+ */
+const FINISH_REQUEST = 'kernel.finish_request';
+```
+
 ### How to check for attached listeners for events?
 
 https://symfony.com/doc/4.0/event_dispatcher.html
@@ -155,6 +283,25 @@ https://symfony.com/doc/4.0/event_dispatcher.html
 
 ### Is it possible to detect if an Event was stopped during runtime?
 yes
+
+### EventDispatcher Component
+The EventDispatcher component provides tools that allow your application
+components to communicate with each other by dispatching events and listening to them.
+
+### Available interfaces
+- EventDispatcherInterface
+- EventSubscriberInterface
+- TraceableEventDispatcherInterface - deprecated as of SF 4.1
+
+### How to install EventDispatcher Component?
+```bash
+composer require symfony/event-dispatcher
+```
+
+### Event naming conventions
+- Use only lowercase letters, numbers, dots (.) and underscores (_)
+- Prefix names with a namespace followed by a dot (e.g. order., user.*)
+- End names with a verb that indicates what action has been taken (e.g. order.placed)
 
 ### Symfony\Component\EventDispatcher\EventDispatcherInterface
 The EventDispatcherInterface is the central point of Symfony's event listener system.
@@ -173,8 +320,12 @@ Listeners are registered on the manager and events are dispatched through the ma
  */
 public function dispatch($eventName, Event $event = null);
 ```
+#### Usage
+```php
+$dispatcher->dispatch(OrderPlaced::NAME, new OrderPlaced(new Order()));
+```
 
-### 
+### Connecting Listeners
 ```php
 /**
  * Adds an event listener that listens on the specified events.
@@ -185,6 +336,32 @@ public function dispatch($eventName, Event $event = null);
  *                            listener will be triggered in the chain (defaults to 0)
  */
 public function addListener($eventName, $listener, $priority = 0);
+```
+#### usage with callable
+```php
+use Symfony\Component\EventDispatcher\Event;
+
+class AcmeListener
+{
+    // ...
+
+    public function onFooAction(Event $event)
+    {
+        // ... do something
+    }
+}
+
+$listener = new AcmeListener();
+$dispatcher->addListener('acme.foo.action', array($listener, 'onFooAction'));
+```
+
+#### usage with closures
+```php
+use Symfony\Component\EventDispatcher\Event;
+
+$dispatcher->addListener('acme.foo.action', function (Event $event) {
+    // will be executed when the acme.foo.action event is dispatched
+});
 ```
 ###
 ```php
@@ -277,10 +454,18 @@ interface EventSubscriberInterface
 }
 ```
 
-### Which design pattern implements the EventDispatcher component?
-Mediator
+### Which design pattern the EventDispatcher component implements?
+Mediator and Observer
+
+### Explain event subscriber?
+Event subscriber is an another way to listen to events.
+
 
 ### Symfony is released under which license ?
+MIT license
+
+https://symfony.com/doc/current/contributing/code/license.html
+
 
 ### Which component provides built-in symfony events?
 HttpKernel component
@@ -294,7 +479,7 @@ https://symfony.com/doc/4.0/reference/events.html
 ### What is the prefix of environment variables used by Symfony?
 SYMFONY_
 
-### What is class loader component?
+### The ClassLoader Component
 It is removed in Symfony 4.0
 
 ### What is FrameworkBundle?
@@ -339,14 +524,15 @@ http://symfony.com/schema/dic/symfony/services-1.0.xsd
     xsi:schemaLocation="http://symfony.com/schema/dic/services
         http://symfony.com/schema/dic/services/services-1.0.xsd
         http://symfony.com/schema/dic/symfony http://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
-
-  
 ```
 
 ### Usage of FrameworkBundle configuration keys
 https://symfony.com/doc/4.0/reference/configuration/framework.html#configuration
 
 ### What is the right parameter path to set a version number for assets?
+`framework.assets.version: v2`
+
+### All supported assets configurations
 ```yaml
 framework:
     assets:
@@ -354,6 +540,13 @@ framework:
         base_urls:
             - 'http://cdn.example.com/'
         version: 'v2'
+        version_format: '%%s?%%s'
+        version_strategy: 'app.asset.my_versioning_strategy'
+        # this manifest is applied to every asset (including packages)
+        json_manifest_path: "%kernel.project_dir%/public/build/manifest.json"
+        packages:
+            avatars:
+                base_urls: 'http://static_cdn.example.com/avatars'
         
 ```
 
@@ -371,6 +564,33 @@ $container->loadFromExtension('framework', array(
     ),
 ));
 ```
+
+### How symfony handles when multiple `base_urls` provided?
+Symfony will select one from the collection each time it generates an asset's path.
+
+### What `packages` configuration does?
+
+### How to Use a Custom Version Strategy for Assets?
+[Here](https://symfony.com/doc/4.0/frontend/custom_version_strategy.html)
+
+[https://symfony.com/doc/4.0/reference/configuration/framework.html#packages](https://symfony.com/doc/4.0/reference/configuration/framework.html#packages)
+
+
+#### secret
+```yaml
+framework:
+    secret: '%env(APP_SECRET)%'
+```
+- recommended length is around 32 characters
+
+https://symfony.com/doc/4.0/reference/configuration/framework.html#secret
+
+#### http_method_override
+https://symfony.com/doc/4.0/reference/configuration/framework.html#http-method-override
+
+
+### How to Configure Symfony to Work behind a Load Balancer or a Reverse Proxy?
+https://symfony.com/doc/4.0/deployment/proxies.html
 
 ### Component vs bundle
 
@@ -410,5 +630,27 @@ https://symfony.com/doc/4.0/session/avoid_session_start.html
 ### Where sessions saved?
 https://symfony.com/doc/4.0/session/sessions_directory.html
 
+### Twig bridge
+https://symfony.com/doc/4.1/reference/twig_reference.html
 
+### The Yaml Component
+https://symfony.com/doc/4.0/components/yaml.html
+
+### Yaml dump
+```php
+/**
+ * Dumps a PHP value to YAML.
+ *
+ * @param mixed $input  The PHP value
+ * @param int   $inline The level where you switch to inline YAML
+ * @param int   $indent The level of indentation (used internally)
+ * @param int   $flags  A bit field of Yaml::DUMP_* constants to customize the dumped YAML string
+ *
+ * @return string The YAML representation of the PHP value
+ */
+public function dump($input, int $inline = 0, int $indent = 0, int $flags = 0): string
+```
+
+### What is default Yaml::dump indentation?
+By default the YAML component will use 4 spaces for indentation
 
