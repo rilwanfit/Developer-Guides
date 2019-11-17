@@ -1,49 +1,33 @@
 ### Installation
 `composer require --dev phpunit/phpunit`
 
-#### 1.Composer class autoload
+1.Composer class autoload
 ```json
 "autoload-dev": {
     "psr-4": {
-    "TalentPitch\\Tests\\Unit\\": "tests/unit/"
+    "App\\Tests\\": "tests/"
     }
 }
 ```
 
-#### 2. phpunit.xml
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<phpunit backupGlobals="false"
-        backupStaticAttributes="false"
-        bootstrap="tests/bootstrap.php"
-        colors="true"
-        convertErrorsToExceptions="true"
-        convertNoticesToExceptions="true"
-        convertWarningsToExceptions="true"
-        processIsolation="false"
-        stopOnFailure="false">
+2. phpunit.xml
+https://gist.github.com/rilwanfit/7777f38a1749635d0f0fbba73dfb909e
 
-    <testsuites>
-        <testsuite name="Unit Test Suite">
-            <directory>./tests/unit/</directory>
-        </testsuite>
-    </testsuites>
-        <filter>
-            <whitelist processUncoveredFilesFromWhitelist="true">
-                <directory suffix=".php">./src</directory>
-            </whitelist>
-        </filter>
-    <php>
-        <env name="APP_ENV" value="devRilwan"/>
-        <env name="APP_DOMAIN" value="harver.dev"/>
-    </php>
-</phpunit>
-```
-
-#### 3. tests/bootstrap.php
+3. tests/bootstrap.php
 `require_once __DIR__ . '/../vendor/autoload.php';`
 
-### Test Environment Configuration
+4. add to `.gitignore`
+
+```bash
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
+```
+
+5. Run `./vendor/bin/phpunit`
+
+### If you want to specify configurtion file
 
 `phpunit --configuration /path/to/your/phpunit.xml`
 
@@ -56,7 +40,7 @@ It is the heart and soul of unit testing. An assertion comes together with const
 *   `assertEquals()` : This verifies that expected and actual values are equal, the same way as the PHP comparison operator ==
 *   `assertSame()` : This is similar to assertEquals() , but it checks whether values are identical, the same way as the === op.
 *   `assertNull()` : This verifies that value is null
-*   `assertEmpty()` : This verifies that value is empty, but it uses the PHP function empty() , which means empty can be false, null, '' , []
+*   `assertEmpty()` : This verifies that value is empty, but it uses the PHP function empty(), which means empty can be false, null, '' , []
 
 [https://phpunit.de/manual/6.0/en/appendixes.assertions.html](https://phpunit.de/manual/6.0/en/appendixes.assertions.html)
 
@@ -72,37 +56,32 @@ you can create your own assertion by extending the _`PHPUnit\Framework\Constrain
 *   I : You get this result when the test is incomplete or not implemented yet `$this->markTestIncomplete()`
 
 
-### Example test class.
+
+### Write first test
+  
+- Test class must extend `PHPUnit\Framework\TestCase` and class name ends with `Test`
+- All your test methods must be `public`
+- Methods name start with `test` or have annotation `@test`
+ 
 ```php
-namespace TalentPitch\Tests\Unit\Model\ResultPage;
+namespace App\Tests\Entity;
 
 use PHPUnit\Framework\TestCase;
 
-class CompetenceScoreTest extends TestCase
+class DinosaurTest extends TestCase
 {
-    public function testAddition()
+    /** @test */
+    public function setting_length(): void
     {
-        $this->assertEquals(2, 1 + 1);
-    }
-    
-    public function testSubtraction()
-    {
-        $this->assertEquals(0.17, (1- 0.83));
-    }
-    
-    public function testMultiplication()
-    {
-        $this->assertEquals(10, 2 * 5);
-    }
-    
-    public function testDivision()
-    {
-        $this->assertTrue(2 == (10 / 5));
+        $dinosaur = new Dinosaur();
+
+        $this->assertSame(0, $dinosaur->getLength());
+
+        $dinosaur->setLength(9);
+
+        $this->assertSame(9, $dinosaur->getLength());
     }
 ```
-
-Run **vendor/bin/phpunit**
-
 
 ### Example 2:
 
@@ -221,6 +200,24 @@ public function compare(array $a, array $b)
 }
 ```
 
+## Test Hooks
+### 1. The setUp Hook
+`public function setUp()`
+-  PHPUnit will automatically call it before each test.
+
+### 2. The tearDown Hook
+`public function tearDown()`
+-  PHPUnit will automatically call it after each test.
+
+### 3. setUpBeforeClass()
+-  are called once for the entire class
+
+### 4. tearDownAfterClass
+-  are called once for the entire class
+
+### 5. onNotSuccessfulTest
+
+
 ### Exceptions are expected
 
 A better way to handle unexpected or unwanted situations is to use exceptions. The reason is that you can recover from exceptions by wrapping code into a try-catch statement and then decide what to do, instead of letting it die.
@@ -236,13 +233,32 @@ public function testCreateUserException()
 }
 ```
 
+### Data providers
+1. public method return array of data
+    ```php
+    public function getSpecificationTests()
+    {
+        return [
+            // specification, is large, is carnivorous
+            ['large carnivorous dinosaur', true, true],
+            ['large herbivore', true, false],
+        ];
+    }
+    ```
+2. Hooking up the Data Provider
+    ```php
+    /** @dataProvider getSpecificationTests */
+    public function testItGrowsADinosaurFromSpecification(string $spec, bool $expectedIsLarge, bool $expectedIsCarnivorous)
+    {
+    ```
+
 ### Code Coverage
 
 Code coverage is a process that detects usage of your code when execute tests.
 
-phpunit --coverage-text ./
+`phpunit --coverage-text ./`
 
-phpunit --coverage-html c:/temp/codeCoverage ./
+`phpunit --coverage-html c:/temp/codeCoverage ./`
 
 ### TestDox
 
@@ -251,3 +267,9 @@ It will turn the test method name _testBankBalanceCannotGoIntoOverdraftUnlessAll
 But be careful: if you have tests that have the same name but you append an integer to the end, TestDox does not know that the two are different.
 
 `phpunit --testdox`
+
+### Upgrade from phpunit 7 to phpunit 8
+
+#### changes 
+https://github.com/sebastianbergmann/phpunit/blob/8.0.0/ChangeLog-8.0.md#800---2019-02-01
+

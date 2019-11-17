@@ -4,7 +4,9 @@
 
 [Mockery](https://github.com/padraic/mockery) is a powerful Mock Object framework for PHP testing.
 
+```bash
 composer require --dev mockery/mockery
+```
 
 When mock needed
 
@@ -22,12 +24,10 @@ Between each test, you need to clean up Mockery so that any expectations from th
 public function tearDown() { Mockery::close();}
 ```
 
-
-
 ### Mockery Expectations
 
 
-#### Should Receive
+#### shouldReceive
 
 This sets Mockery's expectation for which method you want to call on the Mock Object. 
 
@@ -35,33 +35,29 @@ When left on its own, it does not require that the method be triggered; the defa
 
 To assert that you require the method to be called once, or potentially more times, a handful of options are available:
 
+```php
+$mock = \Mockery::mock('SomeClass');
 
-<table>
-  <tr>
-   <td>$this->mock->shouldReceive('all')->once();
-<p>
+$mock->shouldReceive('all')->once();
+
 $mock->shouldReceive('method')->times(1);
-<p>
-$mock->shouldReceive('method')->atLeast()->times(1);
-   </td>
-   <td>$mock = \Mockery::<em>mock</em>('SomeClass');
-<p>
-$mock->shouldReceive('getName')->once()->andReturn('MH Rilwan');
-   </td>
-  </tr>
-</table>
 
+$mock->shouldReceive('method')->atLeast()->times(1);
+
+$mock->shouldReceive('getName')->once()->andReturn('MH Rilwan');
+
+```
 
 [http://docs.mockery.io/en/latest/reference/expectations.html](http://docs.mockery.io/en/latest/reference/expectations.html)
 
 
 #### Once, Twice, Times 
 
-the **once**() method will call the expected method once on the Mock Object.
+the `once()` method will call the expected method once on the Mock Object.
 
-the **twice**() will obviously call the method twice, 
+the `twice()` will obviously call the method twice, 
 
-and **times**() allows you to specify N times.
+and `times()` allows you to specify N times.
 
 For example, say you wanted to find the average amount of Twitter followers of random people, you could use something along the lines of:
 
@@ -80,7 +76,7 @@ public function testAverageTwitterFollowers()
 
 #### With
 
-The **with**() method adds a constraint that this expectation only applies to method calls which match the expected **argument list**.
+The `with()` method adds a constraint that this expectation only applies to method calls which match the expected **argument list**.
 
 This means that the expectation only applies to the method when it is called with these exact arguments. This allows you to test methods under different circumstances.
 
@@ -88,34 +84,23 @@ This means that the expectation only applies to the method when it is called wit
 
 For example, say you had a method that accepts input and validates that input against a default set of validation rules. The method might accept an optional closure that would overwrite those default validation rules. Using the with() method you could mock both of these expectations.
 
+```php
 
-<table>
-  <tr>
-   <td colspan="2" >$mock->shouldReceive('get')->withAnyArgs()->once(); // the default
-<p>
+$mock = \Mockery::mock('File');
+
+$mock->shouldReceive('get')->withAnyArgs()->once(); // the default
 $mock->shouldReceive('get')->with('foo.txt')->once();
-<p>
 $mock->shouldReceive('put')->with('foo.txt', 'foo bar')->once();
-   </td>
-  </tr>
-  <tr>
-   <td>public function fire()
-<p>
-{
-<p>
-   $this->file->put('foo.txt', $this->getContent());
-<p>
-}
-   </td>
-   <td>$mock = \Mockery::<em>mock</em>('File');
-<p>
-$mock->shouldReceive('put')->with('foo.txt', 'content')->once();
-<p>
-$this->fire();
-   </td>
-  </tr>
-</table>
 
+$mock->shouldReceive('put')->with('foo.txt', 'content')->once();
+
+$this->fire();
+
+public function fire()
+{
+    $this->file->put('foo.txt', $this->getContent());
+}
+```
 
 This can be extended even further to allow for the argument values to be dynamic in nature, as long as they meet certain criteria. 
 
@@ -125,18 +110,12 @@ This can be extended even further to allow for the argument values to be dynamic
 2. maybe the argument needs to match a regular expression. Let's assert that any file name that ends with .txt should be matched.
 3. And as a final (but not limited to) example, let's allow for an array of acceptable values, using the anyOf matcher.
 
-<table>
-  <tr>
-   <td colspan="2" >
-$mock->shouldReceive('get')->with(\Mockery::<em>type</em>('string'))->once();
-<p>
-$mock->shouldReceive('put')->with('/\.txt$/', \Mockery::<em>any</em>())->once();
-<p>
-$mock->shouldReceive('put')->with(\Mockery::<em>anyOf</em>('log.txt', 'cache.txt'))->once();
-   </td>
-  </tr>
-</table>
+```php
+$mock->shouldReceive('get')->with(\Mockery::type('string'))->once();
+$mock->shouldReceive('put')->with('/\.txt$/', \Mockery::any())->once();
+$mock->shouldReceive('put')->with(\Mockery::anyOf('log.txt', 'cache.txt'))->once();
 
+```
 
 https://robertbasic.com/blog/complex-argument-matching-in-mockery/
 
@@ -276,28 +255,28 @@ Parts of the class is mocked, but other parts of it is not and functions as the 
 
 ```php
 // MyRepository
-   public function updateStuff(MyModel $model)
-   {
-       if (!$model->exists) throw new Exception;
-       if ($this->model->where('foo', '=', $model->foo)->exists()) return false;
-       $model->foo = 'foo';
-       $model->bar = 'bar';
-       return $model->save();
-   }
+public function updateStuff(MyModel $model)
+{
+   if (!$model->exists) throw new Exception;
+   if ($this->model->where('foo', '=', $model->foo)->exists()) return false;
+   $model->foo = 'foo';
+   $model->bar = 'bar';
+   return $model->save();
+}
 
 // MyRepositoryTest
-   public function testUpdateSomeStuff()
-   {
-       $model = Mockery::mock('MyModel');
-       $model->shouldReceive('where->exists')->andReturn(false);
-       $repo = new MyRepository($model);
-       $model = Mockery::mock('MyModel')->makePartial();
-       $model->shouldReceive('save')->once()->andReturn(true);
-       $model->exists = true;
-       $this->assertTrue($repo->updateStuff($model));
-       $this->assertEquals('foo', $model->foo);
-       $this->assertEquals('bar', $model->bar);
-   }
+public function testUpdateSomeStuff()
+{
+   $model = Mockery::mock('MyModel');
+   $model->shouldReceive('where->exists')->andReturn(false);
+   $repo = new MyRepository($model);
+   $model = Mockery::mock('MyModel')->makePartial();
+   $model->shouldReceive('save')->once()->andReturn(true);
+   $model->exists = true;
+   $this->assertTrue($repo->updateStuff($model));
+   $this->assertEquals('foo', $model->foo);
+   $this->assertEquals('bar', $model->bar);
+}
 
 ```
 

@@ -5,10 +5,17 @@ Test written in code to test code.
 
 ### Testing pyramid
 
-**Unit test**: It should have strong foundation of using test. Test covering very small amount of code.
-**Integration**: Tests multiple modules in the system for compliance. Ex: test own system against database
+#### Unit test
+ It should have strong foundation of using test. 
+ - Test covering very small amount of code.
+ - each unit test is done in isolation. If, for example, a class needs a database connection, we're actually going to fake that database connection so that we can focus on testing just the logic of the class itself.
+#### Integration
+ Tests multiple modules in the system for compliance. 
+ 
+ - An integration test is basically a unit test: you call functions and check their return values. But now, instead of faking the database connection, you'll use the real database connection.
 
-**Acceptance**: Test the system for high-level compliance.
+#### Acceptance / functional
+ Test the system for high-level compliance.
 
 UI: Enter through the UI and test a specific flow.
 
@@ -16,6 +23,14 @@ UI: Enter through the UI and test a specific flow.
 This pyramid reflect the quantity of the tests that you should have in relation to one another in order to have a well-tested application.
 
 [https://martinfowler.com/bliki/TestPyramid.html](https://martinfowler.com/bliki/TestPyramid.html)
+
+
+## TDD
+TDD breaks coding into three steps. First, create the test. Second, write the minimum amount of code to get that test to pass. And third, now that your tests are passing, you can safely refactor your code to make it fancier.
+*   Can reduce bug density
+*   Can encourage more modular designs
+*   Can reduce code complexity
+
 
 ## Acceptance Test
 What is acceptance test?
@@ -119,6 +134,11 @@ If you are not going to keep tests up to date, the initial investment in tests w
 
 You might be tempted to put in the code print statement or use var_dump(). This might also be the moment to write the test, to understand what the code is doing, and verify the functionality without needing to open a browser page. Tests are a good way of learning about your  code.
 
+### PHPUnit worst Practises
+Things you should avoid doing to keep your useful, lean and resilient.
+
+
+
 ## Test Doubles
 
 *   Help to eliminate dependencies such as other code, database, or 3rd-party APIs.
@@ -135,32 +155,7 @@ A stub, on the other hand, is simply a dummy set of data that can be passed arou
 
 ### Creating Test Doubles
 
-Two ways available. 
-
-
-1. $double = $this->**getMock**('MyClass');
-2. $double = $this->**getMockBuilder**('MyClass')->**getMock**();
-
-Todo:  check parameters of getMock()
-
-
-
-1. string $originalClassName : This is a class name from which the double will be created.
-2. array $methods : This will replace all methods by default and will return Null . If the name of the methods are passed in an array, then only these methods will be replaced and the original methods stay untouched (partial mock)
-3. array $arguments : These arguments are used for the original constructor.
-4. string $mockClassName : This indicates the class name for the created test double.
-5. boolean $callOriginalConstructor : This is used when you want to enable/disable the original constructor call.
-6. boolean $callOriginalClone : This is used when you want to enable/disable the original clone method usage.
-7. boolean $callAutoload : This is used when you want to disable __autoload() for loading classes.
-8. boolean $cloneArguments : This allows to enable/disable cloning of all object parameters.
-9. boolean $callOriginalMethods : This argument allows to call the original methods, when test double is used
-10. Object $proxyTarget : This calls the original object for the test proxy.
-
-$double = $this->getMockBuilder('MyClass')->enableOriginalClone()->enableArgumentCloning()->getMock();
-
-When we create test doubles, PHPUnit uses reflection to create a modified version of your class, which will probably look similar
-
-but will behave as though it's configured to the original class.
+https://phpunit.readthedocs.io/en/8.4/test-doubles.html#
 
 ```php
 class MockTester
@@ -689,13 +684,6 @@ We will use PHPUnit's --filter flag to only run our latest test:
 phpunit --filter=show_should_return_a_valid_ad
 
 
-## TDD
-
-
-
-*   Can reduce bug density
-*   Can encourage more modular designs
-*   Can reduce code complexity
 
 
 ## Clean code architecture
