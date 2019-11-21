@@ -1,3 +1,7 @@
+---
+id: index
+title: DDD
+---
 <!----- Conversion time: 1.197 seconds.
 
 

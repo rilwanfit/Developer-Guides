@@ -1,3 +1,8 @@
+---
+id: tmux-and-vim
+title: Tmux
+---
+
 # What is Tmux?
 https://en.wikipedia.org/wiki/Tmux
 

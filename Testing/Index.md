@@ -1,3 +1,9 @@
+---
+id: index
+title: PHPUnit
+sidebar_label: index
+---
+
 # Automated Test
 Test written in code to test code.
 
@@ -467,71 +473,7 @@ This imitates the real object functionality, but is written and used only for te
 #### createMock
 
 
-### Mocking an Eloquent Model
 
-Test Controller for an Eloquent database save() by Mocking the model. 
-
-
-```php
-class AppControllerTest extends TestCase {
-   public function setUp() {
-       parent::setUp();
-       Session::start();
-       Mail::pretend();
-   }
-   public function tearDown() {
-       parent::tearDown();
-       \Mockery::close();
-   }
-   public function testPostApp() {
-       $myvar = array();
-       $this->mock = \Mockery::mock('Eloquent','EventRsvp');
-       $this->app->instance('EventRsvp', $this->mock);
-       $this->mock
-           ->shouldReceive('save')
-           ->once()
-           ->andReturn('true');
-       $response = $this->call('POST', '/3tDYSL0', $myvar);
-   }
-}
-```
-
-
-
-```php
-class AppController extends BaseController {
-    public function saveApp($shortUrl){
-        $rsvp = new EventRsvp;
-        $rsvp->fieldone = '124';
-        $rsvp->fieldtwo = '30233';
-        $rsvp->save();
-
-        $returnredirect = Redirect::to(Request::path(). '/complete');
-        return $returnredirect;
-    }
-}
-```
-
-
-
-```php
-class EventRsvp extends Eloquent {
-
-    protected $guarded = array('id');
-    use Illuminate\Database\Eloquent\SoftDeletingTrait;
-    protected $dates = ['deleted_at'];
-
-    public function relationshipone()
-    {
-        return $this->belongsTo('RelationshipOne','idone');
-    }
-
-    public function relationshiptwo()
-    {
-        return $this->belongsTo('RelationshipTwo','idtwo');
-    }
-}
-```
 
 
 Mocks?
@@ -762,4 +704,12 @@ What's in a good test failure bug report?
 [https://blog.alejandrocelaya.com/2017/02/01/run-phpunit-tests-inside-docker-container-from-phpstorm/](https://blog.alejandrocelaya.com/2017/02/01/run-phpunit-tests-inside-docker-container-from-phpstorm/)
 
 [http://psysh.org/#install](http://psysh.org/#install)
+
+## Learn more
+
+- [Behat](behat)
+- [Codeception](codeception)
+- [Mockery](mockery)
+- [PHPSpec](phpspec)
+- [PHPUnit](phpunit)
 

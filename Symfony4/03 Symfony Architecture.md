@@ -1,3 +1,8 @@
+---
+id: symfony-architecture
+title: Symfony Architecture
+---
+
 ### Symfony 4 default folder structure
 ```bash
 your-project/

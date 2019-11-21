@@ -1,3 +1,7 @@
+---
+id: oop
+title: DDD
+---
 <!----- Conversion time: 17.626 seconds.
 
 

@@ -1,3 +1,7 @@
+---
+id: inheritance
+title: DDD
+---
 ## Class Inheritance
 
 One of the key fundamental concepts of OOP is inheritance. This allows a class to **extend** another class, essentially adding new methods and properties, as well as overriding existing ones as needed.

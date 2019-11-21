@@ -1,3 +1,7 @@
+---
+id: practise-01
+title: Behat
+---
 ## How would you refactor this code with proper tests?
 
 here is the legacy code https://gist.github.com/rilwanfit/e7693614ce68bdd505111b02b43a9df7

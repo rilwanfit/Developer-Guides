@@ -1,0 +1,94 @@
+---
+id: main
+title: Documents
+---
+
+- __docs__
+  - __Composer__
+    - [index.md](Composer/main)
+  - __AWS__
+    - [README.md](AWS/main)
+  - [Dutch.md](Dutch)
+  - __DDD__
+    - [10.0 Repositories.md](DDD/repositories)
+    - [1.0 Introduction.md](DDD/introduction)
+    - [2.1 CQRS.md](DDD/cqrs)
+    - [4.0 Entities.md](DDD/entities)
+    - [5.0 Services.md](DDD/services)
+    - [7.0 Modules.md](DDD/modules)
+    - [3.0 Value Objects.md](DDD/value-objects)
+    - [6.0 Domain Events.md](DDD/domain-events)
+    - [8.0 Aggregates.md](DDD/aggregates)
+    - [2.0 Architectural Styles.md](DDD/architectural-styles)
+    - [9.0 Factories.md](DDD/factories)
+    - [index.md](DDD/index)
+  - [Interviews.md](Interviews)
+  - __Git__
+    - [2.0 Git Hooks.md](Git/git-hooks)
+    - [1.0 Git Messages.md](Git/git-messages)
+    - [index.md](Git/index)
+  - [Opencart 3.md](opencart 3)
+  - __PHP__
+    - [0.1 Components.md](PHP/components)
+    - [Abstract classes.md](PHP/abstract-classes)
+    - __Environments__
+      - [index.md](PHP/Environments/index)
+    - [Anonymous functions and closures.md](PHP/anonymous-functions-and-closures)
+    - [Clean Code.md](PHP/Clean Code)
+    - [0.2 Reflection.md](PHP/reflection)
+    - [Exception and error handling.md](PHP/exception-and-error-handling)
+    - __Web features__
+      - [index.md](PHP/Web features/index)
+    - [OOP.md](PHP/OOP)
+    - __classes and objects__
+      - [12. Traits.md](PHP/classes-and-objects/traits)
+      - [16. Magic methods.md](PHP/classes-and-objects/magic-methods)
+      - [4. Autoloading.md](PHP/classes-and-objects/autoloading)
+      - [5. Contructors and desctructures.md](PHP/classes-and-objects/contructors-and-desctructures)
+      - [6. Visibility.md](PHP/classes-and-objects/visibility)
+      - [Inheritance.md](PHP/classes-and-objects/inheritance)
+      - [3. Constants.md](PHP/classes-and-objects/constants)
+      - [9. Static keyword.md](PHP/classes-and-objects/static-keyword)
+      - [23. Object Serialization.md](PHP/classes-and-objects/object-serialization)
+  - [PHPStan.md](PHPStan)
+  - [README.MD](README)
+  - __Redis__
+    - [index.md](Redis/index)
+  - __Scala__
+    - [0.0.1 Creating a scala project.md](Scala/creating-a-scala-project)
+    - [01. Decimal to binary conversion.md](Scala/decimal-to-binary-conversion)
+    - [0.0. Scala the basics.md](Scala/scala-the-basics)
+    - [03. Assumptions.md](Scala/assumptions)
+    - [04. Matchers.md](Scala/matchers)
+    - [02. Assertions.md](Scala/assertions)
+    - [05. Test fixtures.md](Scala/test-fixtures)
+    - [06. Refactor mercilessly.md](Scala/refactor-mercilessly)
+    - [1.0 Introduction.md](Scala/introduction)
+    - [3.0 Case Objects and Classes.md](Scala/case-objects-and-classes)
+    - [5.0 Idiomatic Scala.md](Scala/idiomatic-scala)
+    - [4.0 Collections.md](Scala/collections)
+    - [2.Basic Object Oriented Programming.md](Scala/basic-object-oriented-programming)
+  - __Symfony 4__
+    - [03 Symfony Architecture.md](Symfony4/symfony-architecture)
+    - [06.0 Routing.md](Symfony4/routing)
+    - [11.0 Security.md](Symfony4/security)
+    - [12.0 HTTP Caching.md](Symfony4/http-caching)
+    - [10.0 Dependency Injection.md](Symfony4/dependency-injection)
+    - [13.0 Console.md](Symfony4/console)
+    - [14.0 Automated Tests.md](Symfony4/automated-tests)
+    - [Entity.md](Symfony4/entity)
+    - [Setup.md](Symfony4/setup)
+    - [index.md](Symfony4/index)
+  - __Testing__
+    - [Behat.md](Testing/behat)
+    - [Codeception.md](Testing/codeception)
+    - [Mockery.md](Testing/mockery)
+    - [PHPSpec.md](Testing/phpspec)
+    - [Index.md](Testing/index)
+    - [PHPUnit.md](Testing/phpunit)
+    - [Practise 01.md](Testing/practise-01)
+  - [Tmux and Vim.md](tmux and vim)
+  - [Xml.md](xml)
+  - [oAuth2.md](oauth2)
+  - [post.md](post)
+

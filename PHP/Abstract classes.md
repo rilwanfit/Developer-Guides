@@ -1,3 +1,7 @@
+---
+id: abstract-classes
+title: DDD
+---
 ## Interfaces and Abstract Classes
 
 ### Abstract class

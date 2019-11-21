@@ -1,22 +1,9 @@
-<!----- Conversion time: 1.007 seconds.
+---
+id: post
+title: Composer
+---
 
-
-Using this Markdown file:
-
-1. Cut and paste this output into your source file.
-2. See the notes and action items below regarding this conversion run.
-3. Check the rendered output (headings, lists, code blocks, tables) for proper
-   formatting and use a linkchecker before you publish this page.
-
-Conversion notes:
-
-* Docs to Markdown version 1.0β14
-* Sun Feb 10 2019 09:40:38 GMT-0800 (PST)
-* Source doc: https://docs.google.com/open?id=1c0lYF8tymSQmpxXqC0YAFbj0ZZzEywdoD2nyovf8C4M
------>
-
-
-
+## Blog to follow
 
 1.  [PHP Version Roundup](https://developerjack.com/blog/2015/12/09/php-version-roundup/)
 1.  [Configuration values are dependencies too?](http://paul-m-jones.com/archives/6203)

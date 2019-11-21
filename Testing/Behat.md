@@ -1,3 +1,8 @@
+---
+id: behat
+title: Behat
+---
+
 ## Behat
 
 [http://behat.org/en/latest/](http://behat.org/en/latest/)

@@ -1,3 +1,7 @@
+---
+id: anonymous-functions-and-closures
+title: DDD
+---
 ## Dynamic Properties in PHP and StdClass
 
 

@@ -1,3 +1,7 @@
+---
+id: entity
+title: Behat
+---
 ## Entity
 
 #### 1. Create a `Dinsaur` class

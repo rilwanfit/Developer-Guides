@@ -1,3 +1,9 @@
+---
+id: phpunit
+title: PHPUnit
+sidebar_label: PHPUnit
+---
+
 ### Installation
 `composer require --dev phpunit/phpunit`
 
@@ -13,6 +19,8 @@
 2. phpunit.xml
 https://gist.github.com/rilwanfit/7777f38a1749635d0f0fbba73dfb909e
 
+Note: this file located in the root of the symfony application
+
 3. tests/bootstrap.php
 `require_once __DIR__ . '/../vendor/autoload.php';`
 
@@ -27,9 +35,17 @@ https://gist.github.com/rilwanfit/7777f38a1749635d0f0fbba73dfb909e
 
 5. Run `./vendor/bin/phpunit`
 
+NOTE: to run the tests in symfony application use `./bin/phpunit`
+
 ### If you want to specify configurtion file
 
 `phpunit --configuration /path/to/your/phpunit.xml`
+
+### If you want to run a tests of a specific folder
+`./bin/phpunit tests/name_of_folder`
+
+### If you want to run a specific tests
+`./bin/phpunit tests/SomeTest.php`
 
 ### Assertion
 
@@ -209,6 +225,8 @@ public function compare(array $a, array $b)
 `public function tearDown()`
 -  PHPUnit will automatically call it after each test.
 
+Note: `setUp` and `tearDown` used to share the code accross tests of a class
+
 ### 3. setUpBeforeClass()
 -  are called once for the entire class
 
@@ -218,7 +236,7 @@ public function compare(array $a, array $b)
 ### 5. onNotSuccessfulTest
 
 
-### Exceptions are expected
+## Exceptions are expected
 
 A better way to handle unexpected or unwanted situations is to use exceptions. The reason is that you can recover from exceptions by wrapping code into a try-catch statement and then decide what to do, instead of letting it die.
 
@@ -233,7 +251,7 @@ public function testCreateUserException()
 }
 ```
 
-### Data providers
+## Data providers
 1. public method return array of data
     ```php
     public function getSpecificationTests()
@@ -252,7 +270,7 @@ public function testCreateUserException()
     {
     ```
 
-### Code Coverage
+## Code Coverage
 
 Code coverage is a process that detects usage of your code when execute tests.
 
@@ -260,7 +278,7 @@ Code coverage is a process that detects usage of your code when execute tests.
 
 `phpunit --coverage-html c:/temp/codeCoverage ./`
 
-### TestDox
+## TestDox
 
 It will turn the test method name _testBankBalanceCannotGoIntoOverdraftUnlessAllowed into_ "Bank balance cannot go into overdraft unless allowed".
 
@@ -272,4 +290,6 @@ But be careful: if you have tests that have the same name but you append an inte
 
 #### changes 
 https://github.com/sebastianbergmann/phpunit/blob/8.0.0/ChangeLog-8.0.md#800---2019-02-01
+
+## Mocks
 

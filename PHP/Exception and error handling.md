@@ -1,3 +1,7 @@
+---
+id: exception-and-error-handling
+title: DDD
+---
 ## Errors and Exceptions
 
 
