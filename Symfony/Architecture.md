@@ -26,11 +26,6 @@ your-project/
 └── vendor/
 ```
 
-### How to install symfony/skeleton version v4.0.13.1
-```bash
-composer create-project symfony/skeleton ./app "4.0.*"
-```
-
 ### Symfony/skeleton folder structure
 ```bash
 your-project/
@@ -53,131 +48,6 @@ your-project/
 ### Where the bundle assets are located?
 
 ### Symfony mail service transport parameter name?
-
-### Emails during Development - Disabling Sending
-```yaml
-# config/packages/test/swiftmailer.yaml
-swiftmailer:
-    disable_delivery: true
-```
-
-```xml
-<!-- config/packages/test/swiftmailer.xml -->
-<?xml version="1.0" encoding="UTF-8" ?>
-<container xmlns="http://symfony.com/schema/dic/services"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:swiftmailer="http://symfony.com/schema/dic/swiftmailer"
-    xsi:schemaLocation="http://symfony.com/schema/dic/services
-        http://symfony.com/schema/dic/services/services-1.0.xsd
-        http://symfony.com/schema/dic/swiftmailer http://symfony.com/schema/dic/swiftmailer/swiftmailer-1.0.xsd">
-
-    <swiftmailer:config disable-delivery="true" />
-</container>
-```
-
-```php
-// config/packages/test/swiftmailer.php
-$container->loadFromExtension('swiftmailer', array(
-    'disable_delivery' => "true",
-));
-```
-
-> which is the default value used by Symfony in the `test` environment
-
-### Emails during development - Sending to a Specified Address(es)
-```yaml
-delivery_addresses: ['dev@example.com']
-```
-
-### how to send email in controller
-```php
-public function index($name, \Swift_Mailer $mailer)
-{
-    $message = (new \Swift_Message('Hello Email'))
-        ->setFrom('send@example.com')
-        ->setTo('recipient@example.com')
-        ->setBody(
-            $this->renderView(
-                'HelloBundle:Hello:email.txt.twig',
-                array('name' => $name)
-            )
-        )
-    ;
-    $mailer->send($message);
-
-    return $this->render(...);
-}
-```
-
-### What is the header will be used by Swift Mailer when we use `delivery_addresses`?
-X-Swift-To, containing the replaced address, so you can still see who it would have been sent to
-
-### What will be happening for CC and BCC when we use `delivery_addresses`?
-this will also stop the email being sent to any CC and BCC addresses set for it. Swift Mailer will add additional 
-headers to the email with the overridden addresses in them. These are X-Swift-Cc and X-Swift-Bcc for the CC and BCC addresses respectively.
-
-### Emails during development - Sending to a Specified Address but with Exceptions
-```yaml
-delivery_addresses: ['dev@example.com']
-    delivery_whitelist:
-       # all email addresses matching these regexes will be delivered
-       # like normal, as well as being sent to dev@example.com
-       - '/@specialdomain\.com$/'
-       - '/^admin@mydomain\.com$/'
-```
-
-```xml
-<swiftmailer:config>
-        <!-- all email addresses matching these regexes will be delivered
-             like normal, as well as being sent to dev@example.com -->
-        <swiftmailer:delivery-whitelist-pattern>/@specialdomain\.com$/</swiftmailer:delivery-whitelist-pattern>
-        <swiftmailer:delivery-whitelist-pattern>/^admin@mydomain\.com$/</swiftmailer:delivery-whitelist-pattern>
-        <swiftmailer:delivery-address>dev@example.com</swiftmailer:delivery-address>
-    </swiftmailer:config>
-```
-
-> The delivery_whitelist option is ignored unless the delivery_addresses option is defined.
-
-### What is Spool Emails?
-Do not send email immediately instead saves the message to somewhere such as a file and another process to read from the spool and take care of sending the emails in the spool.
-
-### What are the Swift Mailer supported spooling methods?
-file or memory
-
-### What is the default behavior of SwiftmailerBundle?
-it will send the email immediately.
-
-### What could be the problem by sending email immediately?
-performance hit of the communication between Swift Mailer and the email transport, which could cause the user to wait for the next page to load while the email is sending
-
-### Spool Using Memory
-The email only gets sent if the whole request got executed without any unhandled exception or any errors.
-
-```yaml
-spool: { type: memory }
-```
-
-### Spool Using Files?
- Symfony creates a folder in the given path for each mail service (e.g. "default" for the default service). This folder will contain files for each email in the spool. So make sure this directory is writable by Symfony (or your webserver/php)!
- 
-```yaml
-spool:
-    type: file
-    path: '%kernel.root_dir%/spool'
-```
-
-### How to send messages in the spool?
-```bash
-app/console swiftmailer:spool:send --env=prod --message-limit=10 --time-limit=10
-``` 
-
-> When you create a message with SwiftMailer, it generates a Swift_Message class. If the swiftmailer service is lazy loaded, it generates instead a proxy class named Swift_Message_<someRandomCharacters>.
-  
-  If you use the memory spool, this change is transparent and has no impact. But when using the filesystem spool, the message class is serialized in a file with the randomized class name. The problem is that this random class name changes on every cache clear. So if you send a mail and then you clear the cache, the message will not be unserializable.
-  
-  On the next execution of swiftmailer:spool:send an error will raise because the class Swift_Message_<someRandomCharacters> doesn't exist (anymore).
-  
-  The solutions are either to use the memory spool or to load the swiftmailer service without the lazy option
 
 ### Symfony flex
 https://symfony.com/doc/4.0/setup/flex.html
@@ -256,19 +126,12 @@ interface HttpKernelInterface
      *
      * When $catch is true, the implementation must catch all exceptions
      * and do its best to convert them to a Response instance.
-     *
-     * @param Request $request A Request instance
-     * @param int     $type    The type of the request
-     *                         (one of HttpKernelInterface::MASTER_REQUEST or HttpKernelInterface::SUB_REQUEST)
-     * @param bool    $catch   Whether to catch exceptions or not
-     *
-     * @return Response A Response instance
-     *
-     * @throws \Exception When an Exception occurs during processing
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true);
 }
 ```
+
+> Return `Symfony\Component\HttpFoundation\Response`
 
 ### Two main classes implementing the `HttpKernelInterface`
 ```
@@ -588,7 +451,6 @@ Mediator and Observer
 
 ### Explain event subscriber?
 Event subscriber is an another way to listen to events.
-
 
 ### Symfony is released under which license ?
 MIT license

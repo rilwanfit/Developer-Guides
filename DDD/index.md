@@ -2,92 +2,8 @@
 id: index
 title: DDD
 ---
-<!----- Conversion time: 31.49 seconds.
 
-
-Using this Markdown file:
-
-1. Cut and paste this output into your source file.
-2. See the notes and action items below regarding this conversion run.
-3. Check the rendered output (headings, lists, code blocks, tables) for proper
-   formatting and use a linkchecker before you publish this page.
-
-Conversion notes:
-
-* Docs to Markdown version 1.0β14
-* Mon Feb 11 2019 10:24:41 GMT-0800 (PST)
-* Source doc: https://docs.google.com/open?id=1M1HVlskMI8AGF1BwOxvtB1xfdLYihDYwXHbA-5doP3c
-
-ERROR:
-undefined internal link to this URL: "#heading=h.6hvmjs35rzu".link text:  encapsulate behaviour in Value Objects
-?Did you generate a TOC?
-
-
-ERROR:
-undefined internal link to this URL: "#heading=h.f26muux1zymo".link text: Anemic Domain Model
-?Did you generate a TOC?
-
-
-ERROR:
-undefined internal link to this URL: "#heading=h.el4uke74nlel".link text: Domain Events
-?Did you generate a TOC?
-
-
-ERROR:
-undefined internal link to this URL: "#heading=h.el4uke74nlel".link text: Domain Events
-?Did you generate a TOC?
-
-
-ERROR:
-undefined internal link to this URL: "#heading=h.lf8zz8lykkoe".link text: already
-?Did you generate a TOC?
-
-
-ERROR:
-undefined internal link to this URL: "#heading=h.qgurkma4qh6g".link text: HasEvents trait
-?Did you generate a TOC?
-
-
-ERROR:
-undefined internal link to this URL: "#heading=h.pkwp8r6sfqvx".link text:  using the ubiquitous language
-?Did you generate a TOC?
-
-
-ERROR:
-undefined internal link to this URL: "#heading=h.5qykk1lkiv0".link text: benefits of using Repositories in web applications.
-?Did you generate a TOC?
-
-* This document has images: check for >>>>>  gd2md-html alert:  inline image link in generated source and store images to your server.
-
-WARNING:
-You have 4 H1 headings. You may want to use the "H1 -> H2" option to demote all headings by one level.
-
------>
-
-
-<p style="color: red; font-weight: bold">>>>>>  gd2md-html alert:  ERRORs: 8; WARNINGs: 1; ALERTS: 14.</p>
-<ul style="color: red; font-weight: bold"><li>See top comment block for details on ERRORs and WARNINGs. <li>In the converted Markdown or HTML, search for inline alerts that start with >>>>>  gd2md-html alert:  for specific instances that need correction.</ul>
-
-<p style="color: red; font-weight: bold">Links to alert messages:</p><a href="#gdcalert1">alert1</a>
-<a href="#gdcalert2">alert2</a>
-<a href="#gdcalert3">alert3</a>
-<a href="#gdcalert4">alert4</a>
-<a href="#gdcalert5">alert5</a>
-<a href="#gdcalert6">alert6</a>
-<a href="#gdcalert7">alert7</a>
-<a href="#gdcalert8">alert8</a>
-<a href="#gdcalert9">alert9</a>
-<a href="#gdcalert10">alert10</a>
-<a href="#gdcalert11">alert11</a>
-<a href="#gdcalert12">alert12</a>
-<a href="#gdcalert13">alert13</a>
-<a href="#gdcalert14">alert14</a>
-
-<p style="color: red; font-weight: bold">>>>>> PLEASE check and correct alert issues and delete this message and the inline alerts.<hr></p>
-
-
-
-# Domain Driven Design
+## Domain Driven Design
 
 It is an approach to help us succeed in understanding and building software model designs.
 
@@ -990,7 +906,7 @@ Command
 
 
 
-# Building a Password Reminder Domain Service
+##Building a Password Reminder Domain Service
 
 [Last week](http://culttt.com/2014/10/20/creating-user-registration-domain-service/) we looked at writing the registration component of Cribbb as a Domain Service. The registration process is going to be a very important part of Cribbb and so I decided to model it as a Domain Service.
 
@@ -2581,7 +2497,7 @@ http://culttt.com/2014/12/15/using-entities-different-bounded-contexts/
 [http://rosstuck.com/persisting-value-objects-in-doctrine/](http://rosstuck.com/persisting-value-objects-in-doctrine/)
 
 
-# **REST and DDD**
+##**REST and DDD**
 
 [https://yuloh.github.io/2016/rest-and-ddd/](https://yuloh.github.io/2016/rest-and-ddd/)
 
@@ -2590,17 +2506,3 @@ http://culttt.com/2014/12/15/using-entities-different-bounded-contexts/
 [https://www.rabbitmq.com/devtools.html#php-dev](https://www.rabbitmq.com/devtools.html#php-dev)
 
 
-## Event sourcing with GDPR
-
-As many already know GDPR came into effect since end of May 2018. As per GDPR customer has right to erasure of right to be forgotten. In my event sourcing application I am having customer sensitive data. 
-
-For whole immutability purpose I do not want to delete or update events. I am familiar with one of the approach which is encrypting data for each customer with it's own key. But this approach has couple of disadvantages
-
-1. I cannot perform search in events (I am using Mongodb to store events)
-
-2. Maintaining key
-
-I wanted to know if anyone else has tried any other approach?
-
-
-<!-- Docs to Markdown version 1.0β14 -->

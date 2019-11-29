@@ -4,30 +4,20 @@ title: Documents
 ---
 
 - __docs__
+  - [API Platfrom](api-platform)
   - __Composer__
     - [index.md](Composer/main)
   - __AWS__
     - [README.md](AWS/main)
   - [Dutch.md](Dutch)
   - __DDD__
-    - [10.0 Repositories.md](DDD/repositories)
-    - [1.0 Introduction.md](DDD/introduction)
-    - [2.1 CQRS.md](DDD/cqrs)
-    - [4.0 Entities.md](DDD/entities)
-    - [5.0 Services.md](DDD/services)
-    - [7.0 Modules.md](DDD/modules)
-    - [3.0 Value Objects.md](DDD/value-objects)
-    - [6.0 Domain Events.md](DDD/domain-events)
-    - [8.0 Aggregates.md](DDD/aggregates)
-    - [2.0 Architectural Styles.md](DDD/architectural-styles)
-    - [9.0 Factories.md](DDD/factories)
-    - [index.md](DDD/index)
+    - [README.md](DDD/main)
   - [Interviews.md](Interviews)
   - __Git__
     - [2.0 Git Hooks.md](Git/git-hooks)
     - [1.0 Git Messages.md](Git/git-messages)
     - [index.md](Git/index)
-  - [Opencart 3.md](opencart 3)
+  - [Opencart 3.md](opencart-3)
   - __PHP__
     - [0.1 Components.md](PHP/components)
     - [Abstract classes.md](PHP/abstract-classes)
@@ -69,16 +59,7 @@ title: Documents
     - [4.0 Collections.md](Scala/collections)
     - [2.Basic Object Oriented Programming.md](Scala/basic-object-oriented-programming)
   - __Symfony 4__
-    - [03 Symfony Architecture.md](Symfony4/symfony-architecture)
-    - [06.0 Routing.md](Symfony4/routing)
-    - [11.0 Security.md](Symfony4/security)
-    - [12.0 HTTP Caching.md](Symfony4/http-caching)
-    - [10.0 Dependency Injection.md](Symfony4/dependency-injection)
-    - [13.0 Console.md](Symfony4/console)
-    - [14.0 Automated Tests.md](Symfony4/automated-tests)
-    - [Entity.md](Symfony4/entity)
-    - [Setup.md](Symfony4/setup)
-    - [index.md](Symfony4/index)
+    - [Index](Symfony/main)
   - __Testing__
     - [Behat.md](Testing/behat)
     - [Codeception.md](Testing/codeception)
@@ -91,4 +72,6 @@ title: Documents
   - [Xml.md](xml)
   - [oAuth2.md](oauth2)
   - [post.md](post)
+  - [Docusaurus](docusaurus)
+  - [React](React/react)
 

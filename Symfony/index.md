@@ -2,24 +2,6 @@
 id: index
 title: Behat
 ---
-<!----- Conversion time: 2.76 seconds.
-
-
-Using this Markdown file:
-
-1. Cut and paste this output into your source file.
-2. See the notes and action items below regarding this conversion run.
-3. Check the rendered output (headings, lists, code blocks, tables) for proper
-   formatting and use a linkchecker before you publish this page.
-
-Conversion notes:
-
-* Docs to Markdown version 1.0β14
-* Sun Feb 10 2019 09:37:46 GMT-0800 (PST)
-* Source doc: https://docs.google.com/open?id=1TpcSeUm2oj6LbWtYCfPzbItCisz5PHZU_zZGRq_ua6A
------>
-
-
 
 ### Create a project using composer \
 `composer create-project symfony/skeleton the_spacebar`
@@ -37,8 +19,6 @@ composer require server
 
 
 Better PHPStorm plugins to work with symfony
-
-
 
 1.  Symfony Plugin
 1.  PHP Annotations
@@ -126,92 +106,8 @@ Flex Recipes
 
 Flex: Install a package using composer, flex helps you to setup all the basic configuratiosn for you :)
 
-
-#### Installing twig
-
-
-```
-
-
-#### composer require twig
-
-```
-
-
-
-1.  Extend base controller that has few helper methods
-1.  Create a twig template
-
-<table>
-  <tr>
-   <td colspan="2" >
-<strong>class ArticleController extends AbstractController</strong>
-<p>
-<strong>{</strong>
-<p>
-<strong>   <em>/**</em></strong>
-<p>
-<strong><em>    * @Route("/{slug}")</em></strong>
-<p>
-<strong><em>    */</em></strong>
-<p>
-<strong><em>   </em>public function homepage(string $slug): Response</strong>
-<p>
-<strong>   {</strong>
-<p>
-<strong>       return $this->render('article/show.html.twig', [</strong>
-<p>
-<strong>           'title' => ucwords(str_replace('-', ' ', $slug)),</strong>
-<p>
-<strong>           'comments' => ['thanks', 'awesome'],</strong>
-<p>
-<strong>       ]);</strong>
-   </td>
-   <td><strong>  templates/article/show.html.twig</strong>
-<p>
-<strong>{% extends 'base.html.twig' %}</strong>
-<p>
-<strong>{% block title %}Read: {{ title }} {% endblock %}</strong>
-<p>
-<strong>{% block body %}</strong>
-<p>
-<strong><h1>{{ title }}</h1></strong>
-<p>
-<strong>Some text......</strong>
-<p>
-<strong><h2>Comments ({{ comments|length }})</h2></strong>
-<p>
-<strong><ul></strong>
-<p>
-<strong>   {% for comment in comments %}</strong>
-<p>
-<strong>       <li>{{ comment }}</li></strong>
-<p>
-<strong>   {% endfor %}</strong>
-<p>
-<strong></ul></strong>
-<p>
-<strong>{% endblock %}</strong>
-   </td>
-  </tr>
-</table>
-
-
-
-##### Twig Basics
-
-Syntax: 
-
-
-
-1.  {{ }}  say something - it prints
-1.  {% %}  do something - can have if, for .. etc
-1.  {# #}  comments
-
-[Twig Reference.](https://twig.symfony.com/doc/2.x/#reference)
-
-[screencast](https://knpuniversity.com/screencast/twig)
-
+### Twig settings
+[Here](twig)
 
 #### Debug Toolbar & Profiler
 
@@ -225,40 +121,34 @@ Syntax:
 
 ## HttpKernelInterface
 
+```php
+namespace Symfony\Component\HttpKernel;
+use Symfony\Component\HttpFoundation\Request;
 
-<table>
-  <tr>
-   <td><strong>namespace </strong>Symfony\Component\HttpKernel;
-<p>
-<strong>use </strong>Symfony\Component\HttpFoundation\Request;
-<p>
-<strong>use </strong>Symfony\Component\HttpFoundation\Response;
-<p>
-<strong>interface </strong>HttpKernelInterface
-<p>
+use Symfony\Component\HttpFoundation\Response;
+
+interface HttpKernelInterface
+
 {
-<p>
-   <strong>const <em>MASTER_REQUEST </em></strong>= 1;
-<p>
-   <strong>const <em>SUB_REQUEST </em></strong>= 2;
-<p>
-<em>   <strong>public function </strong></em>handle(Request $request, $type = <strong>self</strong>::<em>MASTER_REQUEST</em>, $catch = <strong>true</strong>);
-<p>
-}
-   </td>
-   <td>// public/index.php 
-<p>
-$kernel = new Kernel($env, $debug);
-<p>
-$request = Request::<em>createFromGlobals</em>();
-<p>
-$response = $kernel->handle($request);
-<p>
-$response->send();
-   </td>
-  </tr>
-</table>
 
+    const MASTER_REQUEST = 1;
+    
+    const SUB_REQUEST = 2;
+
+    public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true);
+
+```
+
+```php
+// public/index.php
+$kernel = new Kernel($env, $debug);
+
+$request = Request::createFromGlobals();
+
+$response = $kernel->handle($request);
+
+$response->send();
+```
 
 Implementation of this interface will have a capable of converting a given Request into a Response.
 

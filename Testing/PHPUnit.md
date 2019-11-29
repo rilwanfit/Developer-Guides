@@ -4,7 +4,7 @@ title: PHPUnit
 sidebar_label: PHPUnit
 ---
 
-### Installation
+## Installation
 `composer require --dev phpunit/phpunit`
 
 1.Composer class autoload
@@ -47,6 +47,9 @@ NOTE: to run the tests in symfony application use `./bin/phpunit`
 ### If you want to run a specific tests
 `./bin/phpunit tests/SomeTest.php`
 
+### If you want to run only one test?
+`./bin/phpunit --filter testItDoesNotAllowToAddDinosToUnsecureEnclosures`
+
 ### Assertion
 
 It is the heart and soul of unit testing. An assertion comes together with constraint. 
@@ -71,8 +74,6 @@ you can create your own assertion by extending the _`PHPUnit\Framework\Constrain
 *   S : You get this result when the test is skipped `$this->markTestSkipped()`
 *   I : You get this result when the test is incomplete or not implemented yet `$this->markTestIncomplete()`
 
-
-
 ### Write first test
   
 - Test class must extend `PHPUnit\Framework\TestCase` and class name ends with `Test`
@@ -91,7 +92,7 @@ class DinosaurTest extends TestCase
     {
         $dinosaur = new Dinosaur();
 
-        $this->assertSame(0, $dinosaur->getLength());
+        $this->assertEmpty($dinosaur->getLength());
 
         $dinosaur->setLength(9);
 
@@ -242,16 +243,29 @@ A better way to handle unexpected or unwanted situations is to use exceptions. T
 
 
 #### Testing errors and exceptions
+Way 01: 
 ```php
+
 public function testCreateUserException()
 {
    $this->expectException(InvalidArgumentException::class);
+   $this->expectExceptionMessage('Are you craaazy?!?');
    // ...
    $userManager->createUser($user);
 }
 ```
 
+
+Way 02:
+```php
+
+/**
+ * @expectedException \AppBundle\Exception\NotABuffetException
+ */
+```
+
 ## Data providers
+It helps to test many input at once.
 1. public method return array of data
     ```php
     public function getSpecificationTests()
@@ -269,6 +283,108 @@ public function testCreateUserException()
     public function testItGrowsADinosaurFromSpecification(string $spec, bool $expectedIsLarge, bool $expectedIsCarnivorous)
     {
     ```
+
+## Handling Object Dependencies
+Let's create a `Enclosure` class which will hold collection of `Dinosaurs`
+- `Enclosure` will be a doctrine entity
+1. Create `EnclosureTest`
+```php
+class EnclosureTest extends TestCase
+{
+    public function testItHasNoDinosaursByDefault()
+    {
+        $enclosure = new Enclosure();
+        $this->assertEmpty($enclosure->getDinosaurs());
+    }
+```
+2. Create `Enclosure` entity in src/Entity/Enclosure.php
+```php
+use Doctrine\Common\Collections\Collection;
+class Enclosure
+{
+    /** @var Collection */
+    private $dinosaurs;
+    public function __construct()
+    {
+        $this->dinosaurs = new ArrayCollection();
+    }
+    
+    public function getDinosaurs(): Collection
+    {
+        return $this->dinosaurs;
+    }
+}
+```
+3. Add annotations in `Enclosure` entity
+`@ORM\OneToMany(targetEntity="App\Entity\Dinosaur", mappedBy="enclosure", cascade={"persist"})` on property `$dinosaurs`
+ > Code->Generate menu - or Command+N on a mac - and select "ORM Class". That's just a shortcut to add the annotations above the class.
+
+4. Add annotations in `Dinosaurs` entity
+`@ORM\ManyToOne(targetEntity="AppBundle\Entity\Enclosure", inversedBy="dinosaurs")` on property `$enclosure`
+
+5. Add test to make sure that it is possible to add dinosaurs to enclosure
+```php
+public function testItAddsDinosaurs()
+{
+    $enclosure = new Enclosure();
+    $enclosure->addDinosaur(new Dinosaur());
+    $enclosure->addDinosaur(new Dinosaur());
+    
+    $this->assertCount(2, $enclosure->getDinosaurs());
+}
+```
+> Rule 01: Don't mock simple objects
+
+> Rule 02:  If an object requires many other services to instantiate then it is a good candidate for mocking
+
+6. Fix the broken tests
+```php
+public function addDinosaur(Dinosaur $dinosaur)
+{
+    $this->dinosaurs[] = $dinosaur;
+}
+```
+
+### How to create a mock?
+`$this->createMock(DinosaurLengthDeterminator::class);`
+
+when you create a mock, it creates a new class in memory that extends the original, but overrides every method and simply returns null or maybe zero or an empty string, depending on the return type of the function.
+
+- by default, the constructor is skipped when creating the mock... which is pretty sweet, because you don't need to worry about the constructor arguments of a class.
+- by default, all methods are mocked. But you can use the setMethods() function to only mock some methods.
+
+http://www.ifdattic.com/dummy-test-double-using-prophecy/
+
+### Control the return value
+`$this->lengthDeterminator->method('getLengthFromSpecification')->willReturn(20);`
+
+another method is `returnValueMap()` which is a little weird, but allows you to map different return values for different input arguments. That is important if you call the same method multiple times with different values.
+
+or `willReturnValueMap()` or `willReturnCallback()`
+
+### Control method call and arguments
+1. The method must now be called exactly once.
+```php
+$this->lengthDeterminator->expects($this->once())->method('getLengthFromSpecification')
+```
+
+2. Arguments
+Then, after `method()`, add `->with($spec)`. This `with()` function is pretty sweet: if the real method accepts three arguments, then you'll pass those three arguments to with(). In this case, if the value passed to the first argument of getLengthFromSpecification() does not match $spec, the test will fail.
+
+### Asserting Different Number of Method Calls
+And if you don't care how many times a method is called, you can use `$this->any()` instead. Back on the Test Doubles documentation, search for once()... and find the next result until you see a list of "matchers".
+
+These are classes, but there's a shortcut to use each, like `$this->any(), $this->never(), $this->atLeastOnce() and $this->exactly()`.
+
+### Smarter Argument Asserts
+You can also do a little bit of magic for the with() method. Go back to the docs and search for "anything". Cool! This is an example where the method should be called with three arguments. But instead of passing the exact values, we assert that the first argument is greater than zero, the second is a string that contains the word "Something" and we don't care at all what is passed as the third argument.
+
+Search once more for callback(). This is the most powerful option: you create your own callback and do whatever logic you want to determine if the argument passed is valid.
+
+
+## Testing Repositories
+
+[Check here](../DDD/repositories#testing-the-doctrine-user-repository)
 
 ## Code Coverage
 

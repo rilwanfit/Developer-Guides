@@ -21,6 +21,7 @@ https://symfony.com/doc/4.0/console.html#testing-commands
 ### Using PHPUnit, which method allows you to expect an exception to be thrown?
 `$this->expectedException('MyException')`
 
+## Functional test
 ### base component required to write functional test
 `composer require --dev symfony/browser-kit`
 `composer require --dev symfony/css-selector`

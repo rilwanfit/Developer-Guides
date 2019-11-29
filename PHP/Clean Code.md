@@ -490,3 +490,7 @@ function displayAvatar($user) {
    }
 }
 ```  
+
+## Coding standards
+https://github.com/slevomat/coding-standard/blob/master/README.md#slevomatcodingstandardcontrolstructuresassignmentincondition
+

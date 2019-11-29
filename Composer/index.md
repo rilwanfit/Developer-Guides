@@ -3,24 +3,6 @@ id: index
 title: Composer
 ---
 
-<!----- Conversion time: 1.451 seconds.
-
-
-Using this Markdown file:
-
-1. Cut and paste this output into your source file.
-2. See the notes and action items below regarding this conversion run.
-3. Check the rendered output (headings, lists, code blocks, tables) for proper
-   formatting and use a linkchecker before you publish this page.
-
-Conversion notes:
-
-* Docs to Markdown version 1.0β14
-* Sun Feb 10 2019 09:42:08 GMT-0800 (PST)
-* Source doc: https://docs.google.com/open?id=1G13Mo1F9vIXTDMyWss4LjFDW4tvET7mDKJd9i9UIVOE
------>
-
-
 [Composer](https://getcomposer.org/) is a dependency manager and autoloader for PHP.
 
 [https://getcomposer.org/doc/articles/versions.md](https://getcomposer.org/doc/articles/versions.md)
@@ -62,31 +44,14 @@ Conversion notes:
 
 
 1.  PSR-4 autoload setup
-    1.  update composer.json
 
-        ```
+```
 "autoload": {
    "psr-4": {
        "PDP\\": "src/"
    }
 }
 ```
-
-
-    1.  run dump-autoload in composer
-
-
-## composer dump-autoload
-
-
-
-    1.  include vender/autoloader.php in index.php
-
-
-```
-require __DIR__ . '/vendor/autoload.php';
-```
-
 
 
 ## View the versions of all the packages in your project
@@ -255,4 +220,34 @@ Token: e65874059b9800fc66e55f2882f125bdc983b11c
 [http://mamchenkov.net/wordpress/2017/01/31/composer-patches-simple-patches-plugin-for-composer/](http://mamchenkov.net/wordpress/2017/01/31/composer-patches-simple-patches-plugin-for-composer/)
 
 
-<!-- Docs to Markdown version 1.0β14 -->
+https://blog.martinhujer.cz/17-tips-for-using-composer-efficiently/
+
+## composer package development
+A Guide to create a composer package and test the package with a project while you are developing
+
+Composer provides a great out-of-the-box way to develop packages locally, allowing you to symlink fresh and existing repositories from the comfort of your local file system without tagging new releases and pushing changes up to GitHub/Packagist 
+
+Lets start,
+1. Update the project composer.json to use the package that your developing in your computer
+```json
+"repositories": [
+    {
+        "type": "path",
+        "url": "../path-to-your-package",
+        "options": {
+            "symlink": true
+        }
+    }
+]
+```
+> https://getcomposer.org/doc/05-repositories.md#path
+>  If you’re looking at developing multiple packages and having them included in the same project, you can nest your packages inside the path that we declared above, so your packages would reside in ../path-to-your-packages/package-1 and ../path-to-your-packages/package-2.
+
+2. Tell composer that we want to pull in our package that are currently in development
+```json
+"require": {
+    "mhr/my-package": "@dev"
+}
+```
+3. Fianlly,
+`composer update shawpaw/my-package --prefer-source`

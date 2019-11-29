@@ -1,6 +1,6 @@
 ---
 id: security
-title: Behat
+title: Security
 ---
 ## Authentication
 methodologies for authentication
@@ -11,16 +11,10 @@ methodologies for authentication
 - Single sign-on-server
 - and more... name it.
 
-
-## Authorization
-- roles
-- access controls
-- and more.... name it
-
-### How to create an authentication system with login form.
+## How to create an authentication system with login form.
 why its important? It will allow user to login :)
 Following step will allow to create an authentication system
-#### 1. Create a `User` class
+### 1. Create a `User` class
 There is a maker bundle to help us creating a `User` class
 
 ```bash
@@ -33,7 +27,7 @@ Running above command requires you to have following packages installed
 - `composer require security --dev`
 - `composer require orm --dev`
 
-##### What `make:user` command does?
+#### What `make:user` command does?
 1. creates `User` Entity which implement `UserInterface`
 2. creates a `UserRepository` if we want to store the data
 3. creates `security.yaml` inside config/packages
@@ -41,20 +35,30 @@ Running above command requires you to have following packages installed
 - `getUsername()` This method should just return a visual identifier that represents the user, And actually, this method is only used by Symfony to display who is currently logged in on the web debug toolbar
 - `getRoles()` This method related to user permission
 - `getPassword(), getSalt() and eraseCredentials()`.  These are only needed if your app is responsible for storing and checking user passwords.
+- `security.yaml` file updated with new provider.
+```yaml
+app_user_provider:
+    entity:
+        class: App\Entity\User
+        property: username
+```
 
-#### 2. Connect to database
+### 2. Connect to database
 - Create `.env.local`
 ```bash
 DATABASE_URL=mysql://db_user:db_password@127.0.0.1:3306/db_name
 ```
 - Create mysql container https://gist.github.com/rilwanfit/a12e8d3f0dcc2b3b0d7f21c5e836095c
-##### How to run migration?
+#### How to run migration?
 ```bash
  bin/console make:migration
  bin/console doctrine:migrations:migrate
 ```
 
-#### 3. Login - the form
+### Add some fixtures
+[Read more](doctrine-database#data-fixtures)
+
+### 3. Login - the form
 1. Create SecurityController
     ```bash
     bin/console make:controller
@@ -84,18 +88,18 @@ DATABASE_URL=mysql://db_user:db_password@127.0.0.1:3306/db_name
     ```
 4. Fill the gab https://symfony.com/doc/current/security/form_login_setup.html
 
-#### 4. Login - firewall and authenticator/Authentication listeners
+### 4. Login - firewall and authenticator/Authentication listeners
 
-#### What are Authentication Listeners / Authenticators?
+## What are Authentication Listeners / Authenticators?
 At the beginning of every request, Symfony calls a set of "authentication listeners", or "authenticators".
 The job of each authenticator is to look at the request to see if there is any authentication info on it - like a submitted email & password or maybe an API token that's stored on a header. If an authenticator finds some info, it then tries to use it to find the user, check the password if there is one, and log in the user!
 
-#### Firewall
+## Firewall
 - The whole job of the firewall is to authenticate you: to figure out who you are
 - The name of the firewall is totally meaningless.
 - When you define more than one firewall it tries to match the request in order and fallback to the next firewall if needed
 
-##### anonymous: true ?
+### anonymous: true ?
 This allows anonymous requests to pass through this firewall so that users can access your public pages, without needing to login. Even if you want to require authentication on every page of your site, keep this. There's a different place `access_control` - where we can do this better:
 
 1. Create Authentication
@@ -158,14 +162,14 @@ firewalls:
             authenticators:
                 - App\Security\LoginFormAuthenticator
 ```
-NOTE: The important part is that, as soon as we add this, at the beginning of every request, Symfony will call the supports() method on our authenticator.
+> The important part is that, as soon as we add this, at the beginning of every request, Symfony will call the supports() method on our authenticator.
 
-NOTE: is that user authentication info is stored to the session. At the beginning of every request, that info is loaded from the session and we're logged in. Cool!
+> Is that user authentication info is stored to the session. At the beginning of every request, that info is loaded from the session and we're logged in. Cool!
 
-##### How Authentication Errors are Stored
+### How Authentication Errors are Stored
 In reality, when authentication fails, this `AbstractFormLoginAuthenticator::onAuthenticationFailure() `method is called. when authentication fails, internally, it's because something threw an `AuthenticationException`, which is passed to this method. And, ah: this method stores that exception onto a special key in the session! Then, back in the controller, the `lastAuthenticationError()` method is just a shortcut to read that key off of the session!
 
-#### How to customize error messages
+### How to customize error messages
 Method 1: Throw CustomUserMessageAuthenticationException with custom message in authenticator
 
 Method 2: Use translations
@@ -178,7 +182,7 @@ The name security comes from the domain part `{{ error.messageKey|trans(error.me
     ```
 - clear cache `bin/console cache:clear`
 
-##### How to fill the last email
+### How to fill the last email
 1. Make sure that the email input has value set as `value="{{ last_username }}"`
 2. Store last username in the session. `LoginFormAuthenticator::getCredentials` 
     ```php
@@ -188,7 +192,7 @@ The name security comes from the domain part `{{ error.messageKey|trans(error.me
     );
     ```
   
-#### 5. Logout
+### 5. Logout
 Step 1. Create new route in SecurityController
     ```php
     /**
@@ -205,7 +209,7 @@ Step 2. Configure the path
                 path: app_logout
     ```
 
-#### 6. CSRF 
+### 6. CSRF 
 Step 1: Add an `<input type="hidden">` field to our form.
 ```twig
 <input type="hidden" name="_csrf_token"
@@ -227,7 +231,7 @@ if (!$this->csrfTokenManager->isTokenValid($token)) {
 ```
 This requires you to inject the `CsrfTokenManagerInterface`
 
-#### 6. Remember me
+### 6. Remember me
 Step 1: make sure that your checkbox has no value and that its name is `_remember_me`:
 ```twig
 <div class="checkbox mb-3">
@@ -246,7 +250,7 @@ firewalls:
             lifetime: 2592000 # 30 days in seconds, default to 1 year
 ```
 
-#### 7. Use password
+### 7. Use password
 Step 1: make sure user entity has `password` field, getter and setter
 Step 2: The `getSalt` not always necessary (not needed when using the "bcrypt" or argon)
 Step 3: Configure the encoder
@@ -267,118 +271,40 @@ public function checkCredentials($credentials, UserInterface $user)
 This requires you to inject the `UserPasswordEncoderInterface`
 
 
-##### What is UserProvider?
+## What is UserProvider?
 a class that helps with a few things, 
 - like reloading the User data from the session
 - like rem ember me https://symfony.com/doc/master/security/remember_me.html
 - impersonation. https://symfony.com/doc/master/security/impersonating_user.html
 
-##### Do we need to create UserProvider class when we use User Entity?
+## Do we need to create UserProvider class when we use User Entity?
 No, Fortunately, the make:user command already configured one for you in your security.yaml file under the providers key.
 
 > If your User class is an entity, you don't need to do anything else. But if your class is not an entity, then make:user will also have generated a UserProvider class that you need to finish.
 
 https://symfony.com/doc/master/security/user_provider.html
 
-##### Adding more Fields to User
-`bin/console make:entity` will allow editing an existing entity.
+## How to create an authentication system with basic auth
 
-##### Adding Fixtures
-1. `bin/console make:fixtures` This can be used to add dummy users i.e. UserFixtures
-    
-    NOTE:
-    Running above command requires you to have following packages installed
-    - `composer require orm-fixtures --dev`
-    
-    you can use `BaseFixtures` https://gist.github.com/rilwanfit/e10a406109ad67f852064f6d3e61b3e4
-2. Create 10 users
-    ```php
-    protected function loadData(ObjectManager $manager)
-    {
-        $this->createMany(10, 'main_users', function ($i) {
-            $user = new User();
-            $user->setEmail(sprintf('rilwan%d@example.com', $i));
-        
-            return $user;
-        });
-    
-        $manager->flush();
-    }
-    ```
-3. Load fixtures
-    ```bash
-    bin/console doctrine:fixtures:load
-    ```
-    
-4. Make sure data is in databse
-    ```bash
-    bin/console doctrine:query:sql 'SELECT * FROM user'
-    ```
+### How to access the endpoint which under the basic auth
+`http://user:pass@localhost`
 
-###### Adding Fixtures with password encoder
+This will set the username and password for the basic auth request
+
+### Functional tests
+
+To setup functional tests [Check here](automated-tests#functional-test)
 ```php
-    protected function loadData(ObjectManager $manager)
-    {
-        $this->createMany(10, 'main_users', function ($i) {
-            $user = new User();
-            $user->setPassword($this->passwordEncoder->encodePassword($user,'rilwan'));
-        
-            return $user;
-        });
-    
-        $manager->flush();
-    }
+$client = static::createClient([],[
+    'PHP_AUTH_USER' => 'user',
+    'PHP_AUTH_PW'   => 'pass',
+]);
+
+$clawler = $client->request(
+    Request::METHOD_POST,
+    '/'
+);
 ```
-This requires you to inject the `UserPasswordEncoderInterface`
-
-### How to restrict access to some section of the application (Autherization)
-There are two ways
-first, `access_control` and second, denying access in your controller.
-
-#### access_control
-```yaml
-security:
-    access_control:
-        - { path: ^/admin, roles: ROLE_ADMIN }
-```
-
-    - The path is a regular expression
-    - The roles, every user at least has this one role: ROLE_USER
-#### Denying access in controller
-```php
-$this->denyAccessUnlessGranted('ROLE_USER');
-```
-
-or use `@IsGranted("ROLE_ADMIN")` annotation
-
-this requires you to have following packages
-- `composer require annotations`
-
-Annotation can be place in class level or action level
-
-#### Checking role in twig
-```twig
-% if is_granted('ROLE_USER') %}
-```
-
-- Checking for `ROLE_USER` means that user is logged in regardless of his role
-- Checking for `IS_AUTHENTICATED_FULLY` also the same meaning as above
-
-#### Requiring login on every page
-following configuration will be allowing to require login on every page.
-```yaml
-security:
-    access_control:
-        # definitely allow /login to be accessible anonymously
-        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        # if you wanted to force EVERY URL to be protected
-        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
-```
-
-It's possible to use `IS_AUTHENTICATED_FULLY` or `IS_AUTHENTICATED_REMEMBERED`
-
-`IS_AUTHENTICATED_FULLY` means that you have authenticated during this session.
-
 
 ### How to create an authentication system with API token
 An API token authentication system has two, quite unrelated parts. The first is how your app processes an existing API token and logs in the user. The second is how those API tokens are created and distributed.
@@ -481,3 +407,63 @@ firewalls:
 NOTE: The important part is that, as soon as we add this, at the beginning of every request, Symfony will call the supports() method on our authenticator.
 
 NOTE: is that user authentication info is stored to the session. At the beginning of every request, that info is loaded from the session and we're logged in. Cool!
+
+https://symfony.com/doc/3.4/security/api_key_authentication.html
+
+
+## Authorization
+deciding whether or not a user should have access to something. it involves the following
+
+- roles
+- access controls
+- denying access in your controller
+
+### How to restrict access to some section of the application (Autherization)
+There are two ways
+first, `access_control` and second, denying access in your controller.
+
+### access_control
+```yaml
+security:
+    access_control:
+        - { path: ^/admin, roles: ROLE_ADMIN }
+```
+    - The path is a regular expression
+    - The roles, every user at least has this one role: ROLE_USER
+    
+### Denying access in controller
+```php
+$this->denyAccessUnlessGranted('ROLE_USER');
+```
+
+or use `@IsGranted("ROLE_ADMIN")` annotation
+
+this requires you to have following packages
+- `composer require annotations`
+
+Annotation can be place in class level or action level
+
+### Checking role in twig
+```twig
+% if is_granted('ROLE_USER') %}
+```
+
+- Checking for `ROLE_USER` means that user is logged in regardless of his role
+- Checking for `IS_AUTHENTICATED_FULLY` also the same meaning as above
+
+### Requiring login on every page
+following configuration will be allowing to require login on every page.
+```yaml
+security:
+    access_control:
+        # definitely allow /login to be accessible anonymously
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        # if you wanted to force EVERY URL to be protected
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
+```
+
+It's possible to use `IS_AUTHENTICATED_FULLY` or `IS_AUTHENTICATED_REMEMBERED`
+
+`IS_AUTHENTICATED_FULLY` means that you have authenticated during this session.
+
+ 

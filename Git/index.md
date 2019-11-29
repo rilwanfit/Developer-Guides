@@ -283,6 +283,7 @@ Automatic merge failed; fix conflicts and then commit the result.
 
 
 
+
 ## Rerere where
 
 So now that we know what this feature is about, let's think about where this could be useful. If you are working with a feature branch workflow in Git, you will have to merge branches a lot. As a result you ran into same conflicts again and again. This can get really annoying and this is why the rerere feature comes in very handy here.
@@ -302,6 +303,12 @@ So now that we know what this feature is about, let's think about where this cou
 
 
 **http://ryanwinchester.ca/post/set-up-ssh-keys-for-git**
+
+
+## Exclude files or folder from merge
+https://github.com/RWTH-EBC/AixLib/wiki/How-to:-Exclude-files-or-folder-from-merge
+
+
 
 **How to use Github using terminal commands?**
 

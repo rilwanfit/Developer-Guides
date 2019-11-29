@@ -5,7 +5,7 @@ title: Behat
 
 # Dependency Injection
 
-### How to find available services?
+### How to find available services that we can access
 ```bash
 bin/console debug:autowiring
 ```

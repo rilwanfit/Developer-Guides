@@ -1,8 +1,9 @@
 ---
-id: ddd
+id: main
 title: DDD
 ---
 
+- [Event Sourcing](es)
 - [10.0 Repositories.md](repositories)
 - [1.0 Introduction.md](1.0 Introduction.md)
 - [2.0 Architectural Styles.md](2.0 Architectural Styles.md)
@@ -14,6 +15,6 @@ title: DDD
 - [7.0 Modules.md](7.0 Modules.md)
 - [8.0 Aggregates.md](8.0 Aggregates.md)
 - [9.0 Factories.md](9.0 Factories.md)
-- [README.md](README.md)
-- [index.md](index.md)
+- [README.md](main)
+- [index.md](index)
 

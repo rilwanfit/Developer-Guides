@@ -223,8 +223,16 @@ try {
 
 we can throw our own exceptions** by extending the Exception class**:
 
+```php
 
+class NotABuffetException extends \Exception
+{
+    protected $message = 'Custom exception message!';
+}
 ```
+
+```php
+
 class ModelNotFoundException extends Exception {}
 
 // something wrong, throw our custom exception
