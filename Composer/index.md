@@ -11,38 +11,6 @@ title: Composer
 
 **[https://packagist.org/](https://packagist.org/)**
 
-
-## self-update composer in your system
-
-
-## composer self-update
-
-
-## initialize into project
-
-
-## composer init
-
-
-## Create a project
-
-
-## composer create-project package/name name-of-project
-
-
-## include required packagist on the project
-
-
-## composer require package/name
-
-
-## remove package on the project
-
-
-## composer remove package/name
-
-
-
 1.  PSR-4 autoload setup
 
 ```
@@ -55,40 +23,23 @@ title: Composer
 
 
 ## View the versions of all the packages in your project
-
-
-## composer show -i
-
+`composer show -i`
 
 ## View all the dependencies of the installed packages in a tree
-
-
-## composer show -t
-
+`composer show -t`
 
 ## If you need help using a specific package then you can open it's documentation in a browser using composer
+`composer home spatie/laravel-fractal`
 
-
-## composer home spatie/laravel-fractal
-
-
-## validation of the composer.json file
-
-
-## composer validate
-
+## Validate of the composer.json file
+`composer validate`
 
 ## Alphabetically sort dependencies in composer.json
-
-
-## composer require spatie/string --sort-packages
-
+`composer require spatie/string --sort-packages`
 
 ## The composer log file
 
-
-
-*   created when we run  composer install/update 
+*   created when we run  `composer install/update` 
 *   Keeps an **exact** record of the dependency versions that have been installed.
 *   running composer install with existing composer.log file will install all the exact dependencies which were recorded on log file earlier.
 *   versioning the log file?
@@ -96,11 +47,10 @@ title: Composer
     *   maintain same versions across the team
     *   deploying the application using git
 *   Actions that will update composer.log file
-    *   You run composer install for the first time, and the composer.lock file is updated to the installed versions of the dependencies.
-    *   You run composer install after adding a new package, and the exact version of the new package is added to the composer.lock file.
-    *   You run composer update, and all of your packages are updated to their latest versions according to the composer.json. This will update the exact version records in the composer.lock file.
-    *   You run composer install package/name and the version of the specified package is updated to it's latest version observing the package version hint in composer.json. The exact version in the composer.lock file is updated to respect this.
-1.  **K**
+    *   You run `composer install` for the first time, and the composer.lock file is updated to the installed versions of the dependencies.
+    *   You run `composer install` after adding a new package, and the exact version of the new package is added to the composer.lock file.
+    *   You run `composer update`, and all of your packages are updated to their latest versions according to the composer.json. This will update the exact version records in the composer.lock file.
+
 
 **[https://seld.be/notes/typo-squatting-and-packagist](https://seld.be/notes/typo-squatting-and-packagist)**
 
