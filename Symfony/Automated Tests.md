@@ -22,9 +22,99 @@ https://symfony.com/doc/4.0/console.html#testing-commands
 `$this->expectedException('MyException')`
 
 ## Functional test
+from the docs, "Functional tests check the integration of the different layers of an application (from the routing to the views)."
+
+Simply saying it is an end to end test where you send an HTTP request and get the response from the application and you do assertion based on the response. 
+however, you do have a power to go to the database and assert the changes (state) in the persistent layer.
+
+Following could be the best options to consider when you start writing functional tests.
+
+1. Testing with persistence layer.
+Make sure to have a separate database for testing env. which can be setup with `.env.test` file as follows:
+```yaml
+DATABASE_URL=mysql://user:pass@127.0.0.1:3306/database-test?serverVersion=5.7
+```
+
+Second, configure PHPUnit with APP_ENV to test
+```xml
+<php>
+    <server name="APP_ENV" value="test" force="true" />
+```
+
+2. LiipFunctionalTestBundle 
+
+3. Flushing the database with every test
+https://symfony.com/doc/current/testing/database.html#resetting-the-database-automatically-before-each-test
+
+4. Helper traits for testing data. i.e. CreateUsers,
+```php
+namespace Tests\Helpers;
+
+use App\Entity\User;
+
+trait CreatesUsers
+{
+    public function makeUser(): User
+    {
+        $user = new User();
+        $user->setEmail($this->faker->email);
+        $user->setFirstName($this->faker->firstName);
+        $user->setLastName($this->faker->lastName);
+        $user->setRoles([User::ROLE_USER]);
+        $user->setBio($this->faker->paragraph);
+
+        return $user;
+    }
+}
+```
+
+5. swap services in a container
+before symfony 4.1 while writing you tests, you simply cannot access the service from the container and you cannot set another service (a mock service)
+
+in theory, you should not mock anything on functional tests. 
+in practice, there may be situations where you don't have a sandbox environment for a 3rd party services
+
+as of symfony 4.1, during testing, symfony will allow you to access the container and changes services as you wish.
+
+```php
+public function test_a_user_can_purchase_product()
+{
+    $paymentProcessorClient = $this->createMock(PaymentProcessorClient::class);
+    $paymentProcessorClient->expects($this->once())
+        ->method('purchase')
+        ->willReturn($successResponse);
+
+    // this is a hack to make the container use the mocked instance after the redirects
+    $client->disableReboot();
+    $client->getContainer()->set(PaymentProcessorClient::class, $paymentProcessorClient)
+}
+```
+
+> ps: during a single test symfony kernel may boot up couple of times. 
+  basically all the dependencies and leaving your mocked service left out.   
+> ps: disable kernel reboot and make sure the same app kernel instance is used during the lifetime of the test method.
+ This will ensure that the mocked service will not be lost.
+
+6. Use SQLite in memory
+SQLite is serverless, meaning that the SQLite program will write and read all the data from a file.
+
+https://www.sqlite.org/inmemorydb.html
+https://www.doctrine-project.org/projects/doctrine-dbal/en/2.10/reference/configuration.html#connecting-using-a-url
+
+```yaml
+DATABASE_URL=sqlite:///:memory:
+```
+
+7. Testing the Elasticsearch layer
+- you can use different index names during testing
+- pay attentions to the Elasticsearch’s refresh interval
+
+
 ### base component required to write functional test
-`composer require --dev symfony/browser-kit`
-`composer require --dev symfony/css-selector`
+```
+composer require --dev symfony/browser-kit
+composer require --dev symfony/css-selector
+```
 
 ### functional tests location directory
 `tests/Controller`
