@@ -5,75 +5,11 @@ title: Behat
 
 # Dependency Injection
 
-### How to find available services that we can access
-```bash
-bin/console debug:autowiring
-```
 
-### How to find all possible services?
-```bash
-bin/console debug:container
-```
-
-### Create a new service
-```php
-// src/Service/MessageGenerator.php
-namespace App\Service;
-
-class MessageGenerator
-{
-    public function __construct()
-    {
-        dd('MessageGenerator service');
-```
-
-Its immediately available to use in the controller.
-
-### How to use a service inside a controller action?
-```php
-public function list(MessageGenerator $messageGenerator)
-```
-by type-hinting an argument with the service's class or interface name
-
-### Why `debug:autowiring` 
-
-### When service is constructed?
-When you ask for it, it constructs once and reused each time you ask for it.
-
-### How services automatically loads?
-
-```yaml
-# config/services.yaml
-services:
-    # default configuration for services in *this* file
-    _defaults:
-        autowire: true      # Automatically injects dependencies in your services.
-        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-        public: false       # Allows optimizing the container by removing unused services; this also means
-                            # fetching services directly from the container via $container->get() won't work.
-                            # The best practice is to be explicit about your dependencies anyway.
-
-    # makes classes in src/ available to be used as services
-    # this creates a service per class whose id is the fully-qualified class name
-    App\:
-        resource: '../src/*'
-        exclude: '../src/{Entity,Migrations,Tests,Kernel.php}'
-
-    # ...
-```
 ### What is the value of the resource and exclude options?
 It can be any valid glob pattern
 https://en.wikipedia.org/wiki/Glob_(programming)
- 
 
-### How to use a service inside another service?
-```php
-public function __construct(LoggerInterface $logger)
-```
-The key is the LoggerInterface type-hint in your __construct() method and the autowire: true config in services.yaml.
-
-### What will happen if container can't find a service?
-If it can't, you'll see a clear exception with a helpful suggestion.
 
 ### How to explicitly configure a service?
 ```php
